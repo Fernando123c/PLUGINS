@@ -29,6 +29,9 @@ jobs:
       - name: Compilar y ofuscar (Maven + ProGuard)
         run: mvn -B -ntp clean package
 
+      - name: Quitar el jar sin ofuscar
+        run: rm -f target/*_proguard_base.jar
+
       - name: Guardar el .jar como artefacto
         uses: actions/upload-artifact@v4
         with:
