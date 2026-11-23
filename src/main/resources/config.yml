@@ -6,9 +6,7 @@ licencia:
   nombre-servidor: "Mi Servidor"        # nombre para identificarlo en el panel
   minutos-revision: 30                  # cada cuanto revisa la licencia (si la borran, se apaga solo)
   al-fallar: "desactivar"               # "desactivar" el plugin o "apagar" el servidor si la licencia falla
-  # No cambies esto (conexion al panel):
-  url: "https://qgvoarbhgfigjtazfssb.supabase.co"
-  clave-publica: "sb_publishable_85hHLQlg8cYWS3lJo1TT2A_EbEUuHkX"
+  # La conexion al panel va fija dentro del plugin: no se puede cambiar desde aqui.
 
 discord-webhook: ""
 

@@ -34,15 +34,20 @@ public final class LicenseClient {
 
     private LicenseClient() {}
 
+    // Conexion al panel: FIJA dentro del plugin. No se lee del config para que nadie
+    // pueda redirigirla a su propia base de datos y saltarse la licencia.
+    private static final String PANEL_URL = "https://qgvoarbhgfigjtazfssb.supabase.co";
+    private static final String PANEL_KEY = "sb_publishable_85hHLQlg8cYWS3lJo1TT2A_EbEUuHkX";
+
     public static Result check(Plugin plugin) {
         FileConfiguration cfg = plugin.getConfig();
-        String base = cfg.getString("licencia.url", "");
-        String anon = cfg.getString("licencia.clave-publica", "");
+        String base = PANEL_URL;
+        String anon = PANEL_KEY;
         String key = cfg.getString("licencia.license-key", cfg.getString("license-key", ""));
         String serverName = cfg.getString("licencia.nombre-servidor", plugin.getServer().getName());
 
         if (base == null || base.isEmpty() || anon == null || anon.isEmpty())
-            return new Result(false, false, "error", "El plugin no tiene configurado el panel de licencias (licencia.url).");
+            return new Result(false, false, "error", "El plugin no tiene configurado el panel de licencias.");
         if (key == null || key.trim().isEmpty() || key.contains("AQUI"))
             return new Result(false, false, "invalid", "Falta poner tu licencia en el config.yml (licencia.license-key).");
 
