@@ -154,10 +154,19 @@ public final class LicenseClient {
     private static int valuePos(String body, String key) {
         if (body == null) return -1;
         String k = "\"" + key + "\"";
-        int p = body.indexOf(k);
-        if (p < 0) return -1;
-        p += k.length();
-        while (p < body.length() && (body.charAt(p) == ' ' || body.charAt(p) == ':')) p++;
-        return p;
+        int from = 0;
+        while (true) {
+            int p = body.indexOf(k, from);
+            if (p < 0) return -1;
+            int q = p + k.length();
+            while (q < body.length() && body.charAt(q) == ' ') q++;
+            // Solo cuenta si es una CLAVE (le sigue ":"), no un valor como "status":"approved"
+            if (q < body.length() && body.charAt(q) == ':') {
+                q++;
+                while (q < body.length() && body.charAt(q) == ' ') q++;
+                return q;
+            }
+            from = p + k.length();
+        }
     }
 }
