@@ -1,0 +1,48 @@
+name: Compilar plugin
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/**'
+      - 'pom.xml'
+      - '.github/workflows/build.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el codigo
+        uses: actions/checkout@v4
+
+      - name: Instalar Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Compilar y ofuscar (Maven + ProGuard)
+        run: mvn -B -ntp clean package
+
+      - name: Guardar el .jar como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: RbFernan
+          path: target/RbFernan-*.jar
+
+      - name: Publicar en Releases
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Ultima version (RbFernan)
+          body: |
+            Compilado automaticamente desde el ultimo cambio.
+            Descarga el .jar de abajo y ponlo en la carpeta plugins de tu servidor.
+          files: target/RbFernan-*.jar
+          make_latest: true

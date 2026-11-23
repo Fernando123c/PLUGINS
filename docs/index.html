@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel · RbFernan Plugin</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+
+  <div id="setup" class="center hidden">
+    <div class="card narrow">
+      <div class="logo">Rb</div>
+      <h1>Falta configurar el panel</h1>
+      <p class="muted">Abre <code>docs/config.js</code> y pega la <b>Project URL</b> y la clave <b>anon / publishable</b>
+        de tu proyecto de Supabase. Luego sube el cambio a GitHub.</p>
+    </div>
+  </div>
+
+  <div id="login" class="center hidden">
+    <form id="login-form" class="card narrow">
+      <div class="logo">Rb</div>
+      <h1>RbFernan · Plugin</h1>
+      <p class="muted">Panel de licencias</p>
+      <label>Correo<input id="login-email" type="email" autocomplete="username" required></label>
+      <label>Contraseña<input id="login-pass" type="password" autocomplete="current-password" required></label>
+      <button class="btn primary full" type="submit">Entrar</button>
+      <p id="login-error" class="error"></p>
+    </form>
+  </div>
+
+  <div id="app" class="hidden">
+    <header class="topbar">
+      <div class="brand"><div class="logo small">Rb</div><div><b>RbFernan · Plugin</b><span class="muted">Licencias y servidores</span></div></div>
+      <nav class="tabs">
+        <button data-tab="lic" class="tab">Licencias</button>
+        <button data-tab="srv" class="tab">Servidores</button>
+      </nav>
+      <div class="user"><span id="user-email" class="muted"></span><button id="logout" class="btn small">Salir</button></div>
+    </header>
+
+    <main>
+      <section id="tab-lic" class="hidden">
+        <div class="stats">
+          <div class="stat"><span class="muted">Licencias</span><b id="st-lic">—</b></div>
+          <div class="stat"><span class="muted">Servidores</span><b id="st-srv">—</b></div>
+          <div class="stat"><span class="muted">Aprobados</span><b id="st-ok" class="green">—</b></div>
+          <div class="stat"><span class="muted">Pendientes</span><b id="st-pend" class="orange">—</b></div>
+        </div>
+        <form id="lic-form" class="card">
+          <h2>Crear licencias</h2>
+          <div class="grid3">
+            <label>Nota (para quién es)<input id="lic-note" placeholder="Ej: Servidor de Juan"></label>
+            <label>Máx. servidores<input id="lic-max" type="number" min="1" placeholder="Vacío = ilimitado"></label>
+            <label>Vence el<input id="lic-exp" type="date"></label>
+          </div>
+          <label class="check"><input id="lic-auto" type="checkbox"> Aprobar automáticamente el primer servidor</label>
+          <div class="row">
+            <label style="flex:1">Cantidad<input id="lic-qty" type="number" min="1" max="50" value="1"></label>
+            <button class="btn primary" type="submit" style="align-self:flex-end">Crear licencia</button>
+          </div>
+          <div id="lic-created" class="created hidden"></div>
+        </form>
+        <div class="card">
+          <div class="toolbar"><h2>Licencias</h2><button id="lic-refresh" class="btn">Actualizar</button></div>
+          <table>
+            <thead><tr><th>Código</th><th>Nota</th><th>Servidores</th><th>Estado</th><th></th></tr></thead>
+            <tbody id="lic-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="tab-srv" class="hidden">
+        <div class="card">
+          <div class="toolbar">
+            <h2>Servidores</h2>
+            <div class="row">
+              <select id="srv-filter">
+                <option value="all">Todos</option>
+                <option value="pending">Pendientes</option>
+                <option value="approved">Aprobados</option>
+                <option value="rejected">Rechazados</option>
+              </select>
+              <button id="srv-refresh" class="btn">Actualizar</button>
+            </div>
+          </div>
+          <table>
+            <thead><tr><th>Servidor</th><th>IP real</th><th>Licencia</th><th>Versión</th><th>Última vez</th><th>Estado</th><th></th></tr></thead>
+            <tbody id="srv-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+</body>
+</html>

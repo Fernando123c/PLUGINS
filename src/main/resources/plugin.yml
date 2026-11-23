@@ -1,0 +1,17 @@
+name: RbFernan
+version: 3.1-PRO
+main: com.rbfernan.Main
+api-version: '1.20'
+author: Miguelito
+description: Rollbacks de muertes con panel y scanner anti-hacker (1.20.x - 1.21.x)
+softdepend: [Essentials, axvaults, AxVaults]
+permissions:
+  rbfernan.admin:
+    description: Acceso total al panel, rollbacks y scanner.
+    default: op
+  rbfernan.staff:
+    description: Sus baneos activan el scanner (aunque no tengan rbfernan.admin).
+    default: op
+  rbfernan.use:
+    description: Permite usar el comando base del plugin.
+    default: true

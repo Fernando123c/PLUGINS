@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.rbfernan</groupId>
+    <artifactId>RbFernan</artifactId>
+    <version>3.1-PRO</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.20.4-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>RbFernan-${project.version}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
+            <!-- ProGuard: ofusca el .jar (nombres ilegibles al descompilar), sin romper el plugin.
+                 Solo renombra; no borra ni "optimiza" (para que Bukkit siga encontrando todo). -->
+            <plugin>
+                <groupId>com.github.wvengen</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <version>2.6.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>proguard</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <obfuscate>true</obfuscate>
+                    <injar>${project.build.finalName}.jar</injar>
+                    <outjar>${project.build.finalName}.jar</outjar>
+                    <proguardVersion>7.4.2</proguardVersion>
+                    <libs>
+                        <lib>${java.home}/jmods/java.base.jmod</lib>
+                    </libs>
+                    <options>
+                        <option>-dontshrink</option>
+                        <option>-dontoptimize</option>
+                        <option>-dontnote</option>
+                        <option>-ignorewarnings</option>
+                        <option>-dontwarn **</option>
+                        <option>-keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod,Exceptions,SourceFile</option>
+                        <!-- La clase principal la carga Bukkit por su nombre (plugin.yml): no se puede renombrar. -->
+                        <option>-keep class com.rbfernan.Main { *; }</option>
+                        <!-- Los metodos de eventos no se borran (Bukkit los busca por la anotacion). -->
+                        <option>-keepclassmembers class * implements org.bukkit.event.Listener { @org.bukkit.event.EventHandler &lt;methods&gt;; }</option>
+                        <!-- Los enum necesitan values()/valueOf para funcionar. -->
+                        <option>-keepclassmembers enum * { public static **[] values(); public static ** valueOf(java.lang.String); }</option>
+                        <option>-renamesourcefileattribute SourceFile</option>
+                    </options>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.guardsquare</groupId>
+                        <artifactId>proguard-base</artifactId>
+                        <version>7.4.2</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,114 @@
+# ------------------------------------------------------------------ LICENCIA
+# El plugin solo funciona si tu licencia esta aprobada en el panel web.
+# Solo tienes que cambiar "license-key" y, si quieres, "nombre-servidor".
+licencia:
+  license-key: "TU-LICENCIA-AQUI"       # la licencia que te dio el panel
+  nombre-servidor: "Mi Servidor"        # nombre para identificarlo en el panel
+  minutos-revision: 30                  # cada cuanto revisa la licencia (si la borran, se apaga solo)
+  al-fallar: "desactivar"               # "desactivar" el plugin o "apagar" el servidor si la licencia falla
+  # No cambies esto (conexion al panel):
+  url: "https://qgvoarbhgfigjtazfssb.supabase.co"
+  clave-publica: "sb_publishable_85hHLQlg8cYWS3lJo1TT2A_EbEUuHkX"
+
+discord-webhook: ""
+
+comando-principal: "rbfernan"
+
+# Cuantos PV (Player Vaults) maximos se mostraran en el panel de administracion.
+max-player-vaults: 45
+comando-abrir-pv: "axvaults admin %player% %vault%"
+
+discord-formato-webhook: |
+  {
+    "embeds": [{
+      "title": "🛡️ RbFernan Rollback | Registro de Staff",
+      "color": 39321,
+      "fields": [
+        {"name": "👤 Staff", "value": "%staff%", "inline": true},
+        {"name": "🎯 Jugador", "value": "%player%", "inline": true},
+        {"name": "📝 Acción", "value": "%action%", "inline": false},
+        {"name": "⚔️ Culpable", "value": "%killer%", "inline": true},
+        {"name": "📅 Fecha", "value": "%date%", "inline": true}
+      ],
+      "footer": {"text": "Sistema de Seguridad RbFernan PRO"}
+    }]
+  }
+
+# ------------------------------------------------------------------ ITEMS DE PAGA
+# Se detectan por TIPO DE ITEM (material). Se usan en el scanner y en "Entregar SIN items de paga".
+# Nombres de materiales: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+items-de-paga:
+  materiales:
+    - BLAZE_ROD          # jaulas
+    - DIAMOND_SWORD      # espadas
+    - NETHERITE_SWORD
+    - DIAMOND_SHOVEL     # palas
+    - NETHERITE_SHOVEL
+    - DIAMOND_HOE        # azadas
+    - NETHERITE_HOE
+    - PLAYER_HEAD        # kits de paga (cabezas)
+  # (opcional) tambien por nombre o lore. Dejalos vacios para detectar SOLO por item.
+  nombre-contiene: []
+  lore-contiene: []
+  modelo-personalizado: false
+
+# ------------------------------------------------------------------ SCANNER ANTI-HACKER
+# Como funciona (liviano):
+#  1) Cuando alguien MATA a otro jugador, durante "minutos-vigilancia" se anota (solo texto) que hace:
+#     que recoge, que tira, quien recoge lo que tira, donde guarda cosas, quien las saca y que comandos usa.
+#     A los jugadores que no matan a nadie NO se les vigila.
+#  2) No se analiza nada hasta que lo BANEAN con uno de "comandos-de-ban". Ahi se revisa su inventario
+#     y enderchest y se arma el reporte: si tiene los items de paga de sus victimas o a quien se los paso.
+#  3) El reporte sale en el chat del staff, en /rbfernan scanner y en el webhook de Discord.
+scanner:
+  activado: true
+  minutos-vigilancia: 120
+  combate-segundos: 15           # si Minecraft no da el asesino (flecha, caida tras un golpe, fuego/lava/pocion de otro),
+                                 # se usa el ultimo jugador que lo golpeo en estos segundos. Arregla "no mato a nadie".
+  comandos-de-ban: [ipban, ban-ip, banip, ban, tempban, tempipban, tempbanip, ipbanall]
+  avisar-si-no-hay-datos: false  # avisar aunque el baneado no haya matado a nadie
+  max-lineas: 300                # movimientos guardados por jugador vigilado
+  discord-webhook: ""            # vacio = usa el "discord-webhook" de arriba
+  discord-titulo: "🔎 Scanner RbFernan | Hacker baneado"
+  discord-adjuntar-reporte: true # manda tambien el reporte COMPLETO como archivo .txt
+
+configuracion:
+  prefix: "&#0055FF&lR&#0077FF&lb&#0099FF&lF&#00BBFF&le&#00DDFF&lr&#00FFFF&lnan &fRollback &7>> "
+
+shulker-settings:
+  material: "PURPLE_SHULKER_BOX"
+  nombre: "&d&lSHULKER ROLLBACK &7#%count%"
+  lore:
+    - ""
+    - "&7Información del paquete:"
+    - " &f• &7Destinatario: &e%player%"
+    - " &f• &7Autorizado por: &b%staff%"
+    - " &f• &7Fecha: &a%date%"
+    - ""
+    - "&d&oContenido verificado por el Sistema RbFernan"
+
+mensajes:
+  sin-permiso: "&cNo tienes permiso para usar comandos administrativos."
+  config-recargada: "&a¡Configuracion recargada correctamente!"
+  jugador-offline: "&cEl jugador no esta en linea."
+  aprobado: "&a&l¡EXITO! &aTu rollback fue aprobado. Usa &f/%cmd% pendiente"
+  no-aprobado: "&eNo tienes rollbacks listos para reclamar ahora mismo."
+  reclamado-exito: "&b&lRECLAMADO: &fHas recuperado tus objetos correctamente."
+  shulker-entregada: "&dShulker generada con exito en tu inventario."
+  rollback-aplicado: "&aInventario de &f%player% &arestaurado."
+  rollback-enderchest: "&dEnderChest de &f%player% &drestaurado."
+  admin-aprobado-aviso: "&eHas aprobado el rollback de &f%player%."
+  registro-revocado: "&eHas revocado la aprobacion. El registro vuelve a ser PENDIENTE."
+  registro-ya-reclamado: "&c¡El usuario ya reclamo estos items! No puedes revocarlo."
+
+  formato-ayuda-titulo: "&#0099FF&lRbFernan Rollback PRO &7- &fComandos:"
+  formato-ayuda-pendiente: " &7• &f/%cmd% pendiente &8- &7Reclamar tus items"
+  formato-ayuda-admin-gestionar: " &7• &f/%cmd% [Nombre] &8- &7Abrir Panel de Control del Jugador"
+  formato-ayuda-admin-reload: " &7• &f/%cmd% reload &8- &7Recargar la configuracion"
+  formato-ayuda-admin-clear: " &7• &c/%cmd% clear confirmar &8- &7Borrar historial de muertes"
+
+  login-titulo: "&#00BBFF&l¡ROLLBACK PENDIENTE!"
+  login-subtitulo: "&fUsa el comando &e/%cmd% pendiente"
+  login-mensaje: "&aUn administrador ha aprobado tu rollback. ¡Usa &f/%cmd% pendiente &apara recibir tus cosas!"
+
+# Los registros del staff ahora se guardan en plugins/RbFernan/staff-logs.yml

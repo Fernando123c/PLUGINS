@@ -1,0 +1,13 @@
+# Compilacion
+target/
+*.jar
+
+# IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Maven
+.mvn/wrapper/maven-wrapper.jar
+pom.properties
